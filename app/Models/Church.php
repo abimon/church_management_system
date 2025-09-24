@@ -10,6 +10,9 @@ class Church extends Model
         'name',
         'location',
         'address',
-        'contact'
+        'contact',
+        'password',
+        'email',
+        'is_approved'
     ];
 }

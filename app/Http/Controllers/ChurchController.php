@@ -68,18 +68,41 @@ class ChurchController extends Controller
      */
     public function store(Request $request)
     {
-        Church::create([
-            "name"=>request('name'),
-            "location"=>request('location'),
-            "address"=>request('address'),
-            "contact"=>request('contact'),
-            "password"=>Hash::make(request('password')),
-            'email'=>request('email'),
-        ]);
-        if(request()->is('api/*')){
-            return response()->json(['message'=>'Church Created Successfully'],200);
-        }else{
-            return redirect()->back()->with('success','Church Created Successfully');
+        try {
+            $validateChurch = Validator::make(
+                request()->all(),
+                [
+                    'name'=>'required | unique:churches',
+                    'location'=>'required',
+                    'address'=>'required',
+                    'contact'=>'required|unique:churches',
+                    'password'=>'required',
+                    'email'=>'required |unique:churches',
+                ]
+            );
+
+            if ($validateChurch->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'validation error',
+                    'errors' => $validateChurch->errors()
+                ], 401);
+            }
+            Church::create([
+                "name" => request('name'),
+                "location" => request('location'),
+                "address" => request('address'),
+                "contact" => request('contact'),
+                "password" => Hash::make(request('password')),
+                'email' => request('email'),
+            ]);
+            if (request()->is('api/*')) {
+                return response()->json(['message' => 'Church Created Successfully'], 200);
+            } else {
+                return redirect()->back()->with('success', 'Church Created Successfully');
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
         }
     }
 

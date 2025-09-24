@@ -13,10 +13,13 @@ return new class extends Migration
     {
         Schema::create('churches', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('location');
             $table->string('address');
-            $table->string('contact');
+            $table->string('contact')->unique();
+            $table->string('password');
+            $table->string('email')->unique();
+            $table->boolean('is_approved')->default(false);
             $table->timestamps();
         });
     }
