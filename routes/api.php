@@ -14,7 +14,7 @@ Route::controller(UserController::class)->prefix('user')->group(function () {
     Route::post('/login', 'create');
     Route::post('/logout', 'logout');
     Route::post('/refresh', 'refresh');
-    Route::get('/profile', 'profile');
+    Route::get('/profile', 'profile')->middleware('auth:sanctum');
     Route::put('/update/{id}', 'update');
     Route::delete('/delete/{id}', 'delete');
 });
