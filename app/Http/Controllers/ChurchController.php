@@ -16,6 +16,10 @@ class ChurchController extends Controller
     {
         $churches=Church::all();
         if(request()->is('api/*')){
+            $chs=[];
+            foreach($churches as $church){
+                $chs[]=$church->name;
+            }
             return response()->json(['churches'=>$churches],200);
         }else{
             return view('church.index',compact('churches'));
@@ -102,7 +106,14 @@ class ChurchController extends Controller
                 return redirect()->back()->with('success', 'Church Created Successfully');
             }
         } catch (\Throwable $th) {
-            //throw $th;
+           if (request()->is('api/*')) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $th->getMessage()
+                ], 500);
+            } else {
+                return redirect()->back()->with('error', $th->getMessage());
+            }
         }
     }
 
