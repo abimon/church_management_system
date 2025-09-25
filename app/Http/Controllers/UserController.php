@@ -119,6 +119,14 @@ class UserController extends Controller
         }
     }
 
+    public function profile(){
+        $user = Auth::user();
+        return response()->json([
+            'status' => true,
+            'message' => 'User Profile',
+            'user' => $user,
+        ], 200);
+    }
     /**
      * Display the specified resource.
      */

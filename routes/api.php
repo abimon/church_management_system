@@ -14,7 +14,7 @@ Route::controller(UserController::class)->prefix('user')->group(function () {
     Route::post('/login', 'create');
     Route::post('/logout', 'logout');
     Route::post('/refresh', 'refresh');
-    Route::post('/me', 'me');
+    Route::get('/profile', 'profile');
     Route::put('/update/{id}', 'update');
     Route::delete('/delete/{id}', 'delete');
 });
