@@ -100,12 +100,12 @@ class UserController extends Controller
                 'gender'=>request('gender'),
                 'password'=>Hash::make(request('password')),
             ]);
-            Auth::login($user);
+            // Auth::login($user);
             if(request()->is('api/*')){
                 return response()->json([
                     'status' => true,
                     'message' => 'User Created Successfully',
-                    'user' => $user,
+                    // 'user' => $user,
                     'token' => $user->createToken("API TOKEN")->plainTextToken
                 ], 200);
             }else{
