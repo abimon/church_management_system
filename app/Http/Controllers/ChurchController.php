@@ -20,7 +20,7 @@ class ChurchController extends Controller
             foreach($churches as $church){
                 $chs[]=$church->name;
             }
-            return response()->json(['churches'=>$churches],200);
+            return response()->json(['churches'=>$chs],200);
         }else{
             return view('church.index',compact('churches'));
         }
