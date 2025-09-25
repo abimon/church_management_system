@@ -15,6 +15,8 @@ Route::controller(UserController::class)->prefix('user')->group(function () {
     Route::post('/logout', 'logout');
     Route::post('/refresh', 'refresh');
     Route::post('/me', 'me');
+    Route::put('/update/{id}', 'update');
+    Route::delete('/delete/{id}', 'delete');
 });
 
 Route::controller(ChurchController::class)->prefix('/church')->group(function () {
