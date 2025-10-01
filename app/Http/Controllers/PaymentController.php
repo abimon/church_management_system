@@ -37,7 +37,7 @@ class PaymentController extends Controller
         $accounts = Account::all();
 
         if (request()->is('api/*')) {
-            return response()->json(['accounts' => $accounts,'request'=>request()->all()]);
+            // return response()->json(['accounts' => $accounts,'request'=>request()->all()]);
             foreach ($accounts as $account) {
                 if (request($account->name) != '0'|| request($account->name) != null) {
                     try {
