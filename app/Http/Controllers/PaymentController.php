@@ -34,7 +34,6 @@ class PaymentController extends Controller
     public function Callback($id)
     {
         $res = request();
-        // Log::channel('mpesaSuccess')->info(json_encode(['whole' => $res['Body']]));
         $message = $res['Body']['stkCallback']['ResultDesc'];
         $amount = $res['Body']['stkCallback']['CallbackMetadata']['Item'][0]['Value'];
         $TransactionId = $res['Body']['stkCallback']['CallbackMetadata']['Item'][1]['Value'];
@@ -74,6 +73,7 @@ class PaymentController extends Controller
         $response = Http::withToken($this->generateToken())
             ->post($url, $data);
         $res = $response->json();
+        Log::channel('mpesaSuccess')->info(json_encode($res));
         return $res;
     }
     /**
@@ -103,7 +103,7 @@ class PaymentController extends Controller
     {
         $accounts = Account::all();
 
-        if (request()->is('api/*') && request('total_amount') != null && request('contact') != null) {
+        if (request()->is('api/*') && request('total_amount') != null && request('phone') != null) {
             $uniqid = strtoupper(uniqid());
             foreach ($accounts as $account) {
                 if (request($account->name) != null) {
