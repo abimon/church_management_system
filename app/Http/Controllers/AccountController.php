@@ -49,7 +49,7 @@ class AccountController extends Controller
 
     public function summary()
     {
-        $accounts = Account::where('is_active',true)->get();
+        $accounts = Account::all();
         if(request()->is('api/*')){
             $accs = [];
             foreach($accounts as $account){
@@ -62,7 +62,7 @@ class AccountController extends Controller
                     'status'=>$account->is_active ? 'Active' : 'Inactive',
                 ];
             }
-            return response()->json(['accounts'=>$accs,'message'=>'Accounts fetched successfully']);
+            return response()->json(['accounts_summary'=>$accs,'message'=>'Accounts fetched successfully']);
         }
         return view('accounts.index', compact('accounts'));
     }
