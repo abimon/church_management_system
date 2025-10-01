@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth ;
 
 class PaymentController extends Controller
 {
@@ -12,7 +13,11 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        //
+        $payments = Payment::all();
+        if(request()->is('api/*')){
+            return response()->json($payments);
+        }
+        return view('payments.index', compact('payments'));
     }
 
     /**
@@ -26,9 +31,24 @@ class PaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store()
     {
-        //
+        // validate and store payment logic here
+        $validatedData = request()->validate([
+            'account_id' => 'required|exists:accounts,id',
+            'amount' => 'required|numeric',
+            'status' => 'nullable|string',
+            'payment_method' => 'required|string',
+            'reference' => 'nullable|string',
+        ]);
+        $payment = Payment::create([
+            'account_id'=>request('account_id'),
+            'amount'=>request('amount'),
+            'status'=>request('status'),
+            'payment_method'=>request('payment_method'),
+            'reference'=>request('reference'),
+            'logged_by'=>Auth::user()->id,
+        ]);
     }
 
     /**
