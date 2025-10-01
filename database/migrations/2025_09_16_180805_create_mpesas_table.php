@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('mpesas', function (Blueprint $table) {
             $table->id();
             $table->string('TransactionType');
-            $table->unsignedBigInteger('account_id');
+            $table->string('account_id');
             $table->string('TransAmount');
             $table->string('MpesaReceiptNumber');
             $table->string('TransactionDate');
