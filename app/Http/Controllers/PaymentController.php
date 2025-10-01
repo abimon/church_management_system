@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Models\Church;
 use App\Models\Mpesa;
 use App\Models\Payment;
 use Illuminate\Http\Request;
@@ -176,5 +177,27 @@ class PaymentController extends Controller
     public function destroy(Payment $payment)
     {
         //
+    }
+
+    public function getTransactions(){
+        $church = Church::where('name',Auth::user()->church)->first();
+        $transactions = Payment::where('church_id',$church->id)->get();
+        $accounts = Account::where('church_id', $church->id)->get();
+        $tranx = [];
+        foreach ($accounts as $account) {
+            $tranx[] = [
+                'account' => $account->name,
+                'transactions' => $transactions->where('account_id', $account->id),
+                'total' => $transactions->where('account_id', $account->id)->sum('amount')
+            ];
+        }
+        if(request()->is('api/*')){
+            return response()->json([
+                'data'=>$tranx,
+                'message'=>'Transactions fetch successful.',
+                'status'=>true
+            ]);
+        }
+        return view('transactions.index',compact('tranx'));
     }
 }

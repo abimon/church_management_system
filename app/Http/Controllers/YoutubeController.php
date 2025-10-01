@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Prayer;
+use App\Models\Youtube;
 use Illuminate\Http\Request;
 
-class PrayerController extends Controller
+class YoutubeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // fetch videos from youtube using api
-        // $videos = 
+        //
     }
 
     /**
@@ -35,7 +34,7 @@ class PrayerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Prayer $prayer)
+    public function show(Youtube $youtube)
     {
         //
     }
@@ -43,7 +42,7 @@ class PrayerController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Prayer $prayer)
+    public function edit(Youtube $youtube)
     {
         //
     }
@@ -51,7 +50,7 @@ class PrayerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Prayer $prayer)
+    public function update(Request $request, Youtube $youtube)
     {
         //
     }
@@ -59,7 +58,7 @@ class PrayerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Prayer $prayer)
+    public function destroy(Youtube $youtube)
     {
         //
     }

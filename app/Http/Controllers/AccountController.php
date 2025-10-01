@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Models\Church;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AccountController extends Controller
 {
@@ -30,7 +32,8 @@ class AccountController extends Controller
     }
     public function active()
     {
-        $accounts = Account::where('is_active', true)->get();
+        $church = Church::where('name',Auth::user()->church)->first();
+        $accounts = Account::where([['is_active', true],['church_id',$church->id]])->get();
         if (request()->is('api/*')) {
             $accs = [];
             foreach ($accounts as $account) {

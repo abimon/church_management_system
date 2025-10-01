@@ -15,27 +15,27 @@ Route::controller(UserController::class)->prefix('user')->group(function () {
     Route::post('/register', 'store');
     Route::post('/login', 'create');
     Route::post('/logout', 'logout');
-    Route::post('/refresh', 'refresh');
+    Route::post('/refresh', 'refresh')->middleware('auth:sanctum');
     Route::get('/profile', 'profile')->middleware('auth:sanctum');
-    Route::put('/update/{id}', 'update');
-    Route::delete('/delete/{id}', 'delete');
+    Route::put('/update/{id}', 'update')->middleware('auth:sanctum');
+    Route::delete('/delete/{id}', 'delete')->middleware('auth:sanctum');
 });
 
 Route::controller(ChurchController::class)->prefix('/church')->group(function () {
+    Route::get('/', 'index');
+    Route::get('/show/{id}', 'show')->middleware('auth:sanctum');
+    Route::post('/store', 'store');
+    Route::put('/update/{id}', 'update')->middleware('auth:sanctum');
+    Route::delete('/delete/{id}', 'delete')->middleware('auth:sanctum');
+});
+Route::controller(AccountController::class)->middleware('auth:sanctum')->prefix('/account')->group(function () {
     Route::get('/', 'index');
     Route::get('/show/{id}', 'show');
     Route::post('/store', 'store');
     Route::put('/update/{id}', 'update');
     Route::delete('/delete/{id}', 'delete');
-});
-Route::controller(AccountController::class)->prefix('/account')->group(function () {
-    Route::get('/', 'index');
-    Route::get('/show/{id}', 'show')->middleware('auth:sanctum');
-    Route::post('/store', 'store')->middleware('auth:sanctum');
-    Route::put('/update/{id}', 'update')->middleware('auth:sanctum');
-    Route::delete('/delete/{id}', 'delete')->middleware('auth:sanctum');
-    Route::get('/summary', 'summary')->middleware('auth:sanctum');
-    Route::get('/active', 'active')->middleware('auth:sanctum');
+    Route::get('/summary', 'summary');
+    Route::get('/active', 'active');
 });
 Route::controller(PaymentController::class)->prefix('/payment')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
@@ -44,6 +44,7 @@ Route::controller(PaymentController::class)->prefix('/payment')->group(function 
         Route::post('/store', 'store');
         Route::put('/update/{id}', 'update');
         Route::delete('/delete/{id}', 'delete');
+        Route::get('/getTransaction','getTransactions');
     });
     // Payment Callback
     Route::post('/callback/{id}', 'callback');
