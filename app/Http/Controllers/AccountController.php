@@ -79,6 +79,7 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
+        
         try {
             // validate the request data
             $validatedData = $request->validate([

@@ -49,3 +49,5 @@ Route::controller(PaymentController::class)->prefix('/payment')->group(function 
     Route::post('/callback/{id}', 'callback');
 });
 Route::get('/pay/{amount}/{contact}/{id}',[PaymentController::class,'Pay']);
+
+

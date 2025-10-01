@@ -33,12 +33,15 @@ class PaymentController extends Controller
     }
     public function Callback($id)
     {
-        $res = request();
-        $message = $res['Body']['stkCallback']['ResultDesc'];
-        $amount = $res['Body']['stkCallback']['CallbackMetadata']['Item'][0]['Value'];
-        $TransactionId = $res['Body']['stkCallback']['CallbackMetadata']['Item'][1]['Value'];
-        $phne = $res['Body']['stkCallback']['CallbackMetadata']['Item'][4]['Value'];
-        Log::channel('mpesaSuccess')->info(json_encode(['whole' => $res['Body']]));
+        $res = request()['Body']['stkCallback'];
+        $message = $res['ResultDesc'];
+        $data = $res['CallbackMetadata']['Item'];
+        $amount = $data[0]['Value'];
+        $TransactionId = $data[1]['Value'];
+        $phne = $data[4]['Value'];
+
+        Log::channel('mpesaSuccess')->info(json_encode(['data'=>[$amount,$TransactionId,$phne]]));
+        
         Mpesa::create([
             'TransactionType' => 'Paybill',
             'account_id' => $id,
@@ -73,7 +76,6 @@ class PaymentController extends Controller
         $response = Http::withToken($this->generateToken())
             ->post($url, $data);
         $res = $response->json();
-        Log::channel('mpesaSuccess')->info(json_encode($res));
         return $res;
     }
     /**
