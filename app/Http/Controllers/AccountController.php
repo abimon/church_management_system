@@ -18,7 +18,7 @@ class AccountController extends Controller
             foreach($accounts as $account){
                 $accs[] =$account->name;
             }
-            return response()->json(['accounts'=>$accounts]);
+            return response()->json(['accounts'=>$accs,'message'=>'Accounts fetched successfully']);
         }
         return view('accounts.index', compact('accounts'));
     }
