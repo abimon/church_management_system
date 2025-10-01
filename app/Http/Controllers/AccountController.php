@@ -106,21 +106,33 @@ class AccountController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Account $account)
+    public function update($id)
     {
-        if(request('name')!=null){
-            $account->name=request('name');
+        try {
+            $account = Account::findorFail($id);
+            if (request('name') != null) {
+                $account->name = request('name');
+            }
+            if (request('is_active') != null) {
+                $account->is_active = request('is_active');
+            }
+            if (request('target') != null) {
+                $account->target = request('target');
+            }
+            if (request('parent_account_id') != null) {
+                $account->parent_account_id = request('parent_account_id');
+            }
+            $account->update();
+            if(request()->is('api/*')){
+                return response()->json(['message' => 'Account updated successfully', 'account' => $account], 200);
+            }
+            return redirect()->back()->with('success', 'Account updated successfully');
+        } catch (\Throwable $th) {
+            if(request()->is('api/*')){
+                return response()->json(['message' => 'Account update failed', 'error' => $th->getMessage()], 500);
+            }
+            return redirect()->back()->with('error', 'Account update failed: ' . $th->getMessage());
         }
-        if(request('is_active')!=null){
-            $account->is_active=request('is_active');
-        }
-        if(request('target')!=null){
-            $account->target=request('target');
-        }
-        if(request('parent_account_id')!=null){
-            $account->parent_account_id=request('parent_account_id');
-        }
-        $account->update();
     }
 
     /**
