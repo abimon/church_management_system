@@ -37,23 +37,21 @@ class PaymentController extends Controller
         $accounts = Account::all();
 
         if (request()->is('api/*')) {
-            // return response()->json(['accounts' => $accounts,'request'=>request()->all()]);
             foreach ($accounts as $account) {
                 if (request($account->name) != null) {
-                    return $account->name;
-                    // try {
-                    //     Payment::create([
-                    //         'account_id' => $account->id,
-                    //         'amount' => request($account->name),
-                    //         'status' => 'pending',
-                    //         'payment_method' => request('payment_method') ?? 'Mobile Money',
-                    //         'reference' => strtoupper(uniqid()),
-                    //         'user_id' => Auth::user()->id,
-                    //         'logged_by' => Auth::user()->id,
-                    //     ]);
-                    // } catch (\Exception $e) {
-                    //     return response()->json(['message' => 'Error logging payment for account: ' . $account->name, 'error' => $e->getMessage()], 500);
-                    // }
+                    try {
+                        Payment::create([
+                            'account_id' => $account->id,
+                            'amount' => request($account->name),
+                            'status' => 'pending',
+                            'payment_method' => request('payment_method') ?? 'Mobile Money',
+                            'reference' => strtoupper(uniqid()),
+                            'user_id' => Auth::user()->id,
+                            'logged_by' => Auth::user()->id,
+                        ]);
+                    } catch (\Exception $e) {
+                        return response()->json(['message' => 'Error logging payment for account: ' . $account->name, 'error' => $e->getMessage()], 500);
+                    }
                 }
             }
             return response()->json(['message' => 'Payments logged successfully']);
