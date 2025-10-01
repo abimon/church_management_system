@@ -110,18 +110,10 @@ class AccountController extends Controller
     {
         try {
             $account = Account::findorFail($id);
-            if (request('name') != null) {
-                $account->name = request('name');
-            }
-            if (request('is_active') != null) {
-                $account->is_active = request('is_active')==0?false:true;
-            }
-            if (request('target') != null) {
-                $account->target = request('target');
-            }
-            if (request('parent_account_id') != null) {
-                $account->parent_account_id = request('parent_account_id');
-            }
+            $account->name = request('name') ?? $account->name;
+            $account->is_active = request('is_active') ?? $account->is_active;
+            $account->target = request('target') ?? $account->target;
+            $account->parent_account_id = request('parent_account_id') ?? $account->parent_account_id;
             $account->update();
             if(request()->is('api/*')){
                 return response()->json(['message' => 'Account updated successfully', 'account' => $account], 200);
