@@ -40,7 +40,7 @@ class PaymentController extends Controller
         $TransactionId = $data[1]['Value'];
         $phne = $data[4]['Value'];
 
-        Log::channel('mpesaSuccess')->info(json_encode(['data'=>[$amount,$TransactionId,$phne]]));
+        Log::channel('mpesaSuccess')->info(json_encode(['data'=>[$message,$amount,$TransactionId,$phne,$id]]));
         
         Mpesa::create([
             'TransactionType' => 'Paybill',
