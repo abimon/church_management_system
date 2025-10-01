@@ -109,13 +109,12 @@ class AccountController extends Controller
     public function update($id)
     {
         try {
-            return response()->json(request('is_active'));
             $account = Account::findorFail($id);
             if (request('name') != null) {
                 $account->name = request('name');
             }
             if (request('is_active') != null) {
-                $account->is_active = request('is_active');
+                $account->is_active = request('is_active')==0?false:true;
             }
             if (request('target') != null) {
                 $account->target = request('target');
