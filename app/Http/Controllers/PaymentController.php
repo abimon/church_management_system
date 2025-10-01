@@ -150,9 +150,15 @@ class PaymentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Payment $payment)
+    public function show($id)
     {
-        //
+        $transactions=Payment::where('account_id',)->orderBy('created_at','desc')->get();
+        if(request()->is('api/*')){
+            return response()->json([
+                'data'=>$transactions,
+            ]);
+        }
+        return view('transactions.index',compact('transctions'));
     }
 
     /**
@@ -199,5 +205,23 @@ class PaymentController extends Controller
             ]);
         }
         return view('transactions.index',compact('tranx'));
+    }
+
+    public function getPersonalTransaction(){
+        $id = Auth::user()->id;
+        $transactions = Payment::where('payments.user_id',$id)->join('accounts','payments.account_id','=','acounts.id')->select('accounts.name as account','transaction.*')->get();
+        if(request()->is('api/*')){
+            return response()->json(['transaction'=> $transactions]);
+        }
+        return view('transactions.show',compact('transactions'));
+    }
+    public function getTransaction($id)
+    {
+        // $id = Auth::user()->id;
+        $transactions = Payment::where('payments.user_id', $id)->join('accounts', 'payments.account_id', '=', 'acounts.id')->select('accounts.name as account', 'transaction.*')->get();
+        if (request()->is('api/*')) {
+            return response()->json(['transaction' => $transactions]);
+        }
+        return view('transactions.show', compact('transactions'));
     }
 }

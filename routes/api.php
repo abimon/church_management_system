@@ -45,6 +45,9 @@ Route::controller(PaymentController::class)->prefix('/payment')->group(function 
         Route::put('/update/{id}', 'update');
         Route::delete('/delete/{id}', 'delete');
         Route::get('/getTransaction','getTransactions');
+        Route::get('/getPersonalTransaction', 'getPersonalTransaction');
+        Route::get('/getTransaction/{id}', 'getTransaction');
+
     });
     // Payment Callback
     Route::post('/callback/{id}', 'callback');
