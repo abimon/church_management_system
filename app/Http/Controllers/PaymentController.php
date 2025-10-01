@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+use function Pest\Laravel\json;
+
 class PaymentController extends Controller
 {
     public function generateToken()
@@ -42,19 +44,27 @@ class PaymentController extends Controller
 
         Log::channel('mpesaSuccess')->info(json_encode(['data'=>[$message,$amount,$TransactionId,$phne,$id]]));
         
-        Mpesa::create([
-            'TransactionType' => 'Paybill',
-            'account_id' => $id,
-            'TransAmount' => $amount,
-            'MpesaReceiptNumber' => $TransactionId,
-            'TransactionDate' => date('d-m-Y'),
-            'PhoneNumber' => '+' . $phne,
-            'response' => $message
-        ]);
-        Payment::where('reference', $id)->update(['status' => 'completed']);
-        $response = new Response();
-        $response->headers->set("Content-Type", "text/xml; charset=utf-8");
-        $response->setContent(json_encode(["C2BPaymentConfirmationResult" => "Success"]));
+        try {
+            Mpesa::create([
+                'TransactionType' => 'Paybill',
+                'account_id' => $id,
+                'TransAmount' => $amount,
+                'MpesaReceiptNumber' => $TransactionId,
+                'TransactionDate' => date('d-m-Y'),
+                'PhoneNumber' => '+' . $phne,
+                'response' => $message
+            ]);
+            Payment::where('reference', $id)->update(['status' => 'completed']);
+            $response = new Response();
+            $response->headers->set("Content-Type", "text/xml; charset=utf-8");
+            $response->setContent(json_encode(["C2BPaymentConfirmationResult" => "Success"]));
+        } catch (\Throwable $th) {
+            Log::channel('mpesaSuccess')->info(
+                json_encode([
+                    'errors'=>$th->getMessage()
+                ])
+            );
+        }
         return $response;
     }
     public function Pay($amount, $contact, $id)
