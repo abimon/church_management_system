@@ -12,7 +12,7 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $accounts = Account::where('is_active',true)->get();
+        $accounts = Account::all();
         if(request()->is('api/*')){
             $accs = [];
             foreach($accounts as $account){
@@ -25,6 +25,24 @@ class AccountController extends Controller
                 ];
             }
             return response()->json(['accounts'=>$accs,'message'=>'Accounts fetched successfully']);
+        }
+        return view('accounts.index', compact('accounts'));
+    }
+    public function active()
+    {
+        $accounts = Account::where('is_active', true)->get();
+        if (request()->is('api/*')) {
+            $accs = [];
+            foreach ($accounts as $account) {
+                $accs[] = [
+                    'id' => $account->id,
+                    'name' => $account->name,
+                    'target' => $account->target,
+                    'parent_account' => $account->parent_account->name ?? null,
+                    'is_active' => $account->is_active,
+                ];
+            }
+            return response()->json(['accounts' => $accs, 'message' => 'Accounts fetched successfully']);
         }
         return view('accounts.index', compact('accounts'));
     }
