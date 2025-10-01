@@ -122,7 +122,7 @@ class PaymentController extends Controller
                     }
                 }
             }
-            $contact = request('contact');
+            $contact = request('phone');
             $phone = ltrim($contact, 0);
             $phone = '254' . $phone;
             $resp = $this->Pay(request('total_amount'), $phone, $uniqid);
