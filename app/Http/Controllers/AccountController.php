@@ -109,8 +109,8 @@ class AccountController extends Controller
     public function update($id)
     {
         try {
-            // return response()->json(['id'=>$id,'request'=>request()->all()]);
             $account = Account::findorFail($id);
+            return $account;
             if (request('name') != null) {
                 $account->name = request('name');
             }
