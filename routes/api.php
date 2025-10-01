@@ -36,7 +36,7 @@ Route::controller(AccountController::class)->prefix('/account')->group(function 
     Route::delete('/delete/{id}', 'delete')->middleware('auth:sanctum');
     Route::get('/summary', 'summary')->middleware('auth:sanctum');
 });
-Route::controller(PaymentController::class)->prefix('/payment')->group(function () {
+Route::controller(PaymentController::class)->middleware('auth:sanctum')->prefix('/payment')->group(function () {
     Route::get('/', 'index');
     Route::get('/show/{id}', 'show');
     Route::post('/store', 'store');
