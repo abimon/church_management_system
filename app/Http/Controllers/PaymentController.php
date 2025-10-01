@@ -37,7 +37,7 @@ class PaymentController extends Controller
         $accounts = Account::all();
         if (request()->is('api/*')) {
             foreach ($accounts as $account) {
-                if (request($account->name) != null) {
+                if (request($account->name) != '0'|| request($account->name) != null) {
                     try {
                         Payment::create([
                             'account_id' => $account->id,
