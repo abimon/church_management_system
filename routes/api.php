@@ -34,6 +34,7 @@ Route::controller(AccountController::class)->prefix('/account')->group(function 
     Route::post('/store', 'store');
     Route::put('/update/{id}', 'update');
     Route::delete('/delete/{id}', 'delete');
+    Route::get('/summary', 'summary')->middleware('auth:sanctum');
 });
 Route::controller(PaymentController::class)->prefix('/payment')->group(function () {
     Route::get('/', 'index');
