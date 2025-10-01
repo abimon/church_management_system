@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -34,12 +35,11 @@ class PaymentController extends Controller
     {
         $res = request();
         // Log::channel('mpesaSuccess')->info(json_encode(['whole' => $res['Body']]));
-        // if ($res['Body']['stkCallback']['ResultCode'] == 0) {
         $message = $res['Body']['stkCallback']['ResultDesc'];
         $amount = $res['Body']['stkCallback']['CallbackMetadata']['Item'][0]['Value'];
         $TransactionId = $res['Body']['stkCallback']['CallbackMetadata']['Item'][1]['Value'];
         $phne = $res['Body']['stkCallback']['CallbackMetadata']['Item'][4]['Value'];
-        // Log::channel('mpesaSuccess')->info(json_encode(['whole' => $res['Body']]));
+        Log::channel('mpesaSuccess')->info(json_encode(['whole' => $res['Body']]));
         Mpesa::create([
             'TransactionType' => 'Paybill',
             'account_id' => $id,
@@ -55,7 +55,7 @@ class PaymentController extends Controller
         $response->setContent(json_encode(["C2BPaymentConfirmationResult" => "Success"]));
         return $response;
     }
-    function Pay($amount, $contact, $id)
+    public function Pay($amount, $contact, $id)
     {
         $url = (env('MPESA_ENV') == 'live') ? 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest' : 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
         $data = [
@@ -103,7 +103,7 @@ class PaymentController extends Controller
     {
         $accounts = Account::all();
 
-        if (request()->is('api/*')) {
+        if (request()->is('api/*') && request('total_amount') != null && request('contact') != null) {
             $uniqid = strtoupper(uniqid());
             foreach ($accounts as $account) {
                 if (request($account->name) != null) {
