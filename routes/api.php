@@ -30,10 +30,10 @@ Route::controller(ChurchController::class)->prefix('/church')->group(function ()
 });
 Route::controller(AccountController::class)->prefix('/account')->group(function () {
     Route::get('/', 'index');
-    Route::get('/show/{id}', 'show');
-    Route::post('/store', 'store');
-    Route::put('/update/{id}', 'update');
-    Route::delete('/delete/{id}', 'delete');
+    Route::get('/show/{id}', 'show')->middleware('auth:sanctum');
+    Route::post('/store', 'store')->middleware('auth:sanctum');
+    Route::put('/update/{id}', 'update')->middleware('auth:sanctum');
+    Route::delete('/delete/{id}', 'delete')->middleware('auth:sanctum');
     Route::get('/summary', 'summary')->middleware('auth:sanctum');
 });
 Route::controller(PaymentController::class)->prefix('/payment')->group(function () {
