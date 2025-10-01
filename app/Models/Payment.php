@@ -13,5 +13,6 @@ class Payment extends Model
         'payment_method',
         'reference',
         'logged_by',
+        'user_id',
     ];
 }

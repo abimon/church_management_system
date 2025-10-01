@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth ;
@@ -33,22 +34,21 @@ class PaymentController extends Controller
      */
     public function store()
     {
-        // validate and store payment logic here
-        $validatedData = request()->validate([
-            'account_id' => 'required|exists:accounts,id',
-            'amount' => 'required|numeric',
-            'status' => 'nullable|string',
-            'payment_method' => 'required|string',
-            'reference' => 'nullable|string',
-        ]);
-        $payment = Payment::create([
-            'account_id'=>request('account_id'),
-            'amount'=>request('amount'),
-            'status'=>request('status'),
-            'payment_method'=>request('payment_method'),
-            'reference'=>request('reference'),
-            'logged_by'=>Auth::user()->id,
-        ]);
+        $accounts = Account::all();
+        if(request()->is('api/*')){
+            foreach($accounts as $account){
+                if(request($account->name)!=null){
+                    Payment::create([
+                    'account_id' => $account->id,
+                    'amount' => request($account->name),
+                    'status' => 'pending',
+                    'payment_method' => request('payment_method')??'Mobile Money',
+                    'reference' => strtoupper(uniqid()),
+                    'logged_by' => Auth::user()->id,
+                ]);}
+            }
+            return response()->json(['message'=>'Payments logged successfully']);
+        }
     }
 
     /**

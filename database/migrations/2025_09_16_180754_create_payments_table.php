@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('status');
             $table->string('payment_method');
             $table->string('reference');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('logged_by')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
