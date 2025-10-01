@@ -58,6 +58,7 @@ class PaymentController extends Controller
             $response = new Response();
             $response->headers->set("Content-Type", "text/xml; charset=utf-8");
             $response->setContent(json_encode(["C2BPaymentConfirmationResult" => "Success"]));
+            return $response;
         } catch (\Throwable $th) {
             Log::channel('mpesaSuccess')->info(
                 json_encode([
@@ -65,7 +66,6 @@ class PaymentController extends Controller
                 ])
             );
         }
-        return $response;
     }
     public function Pay($amount, $contact, $id)
     {
