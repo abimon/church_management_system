@@ -16,13 +16,38 @@ class AccountController extends Controller
         if(request()->is('api/*')){
             $accs = [];
             foreach($accounts as $account){
-                $accs[] =$account->name;
+                $accs[] =[
+                    'id' => $account->id,
+                    'name'=>$account->name,
+                    'target'=>$account->target,
+                    'parent_account'=>$account->parent_account->name ?? null,
+                    'is_active'=>$account->is_active,
+                ];
             }
             return response()->json(['accounts'=>$accs,'message'=>'Accounts fetched successfully']);
         }
         return view('accounts.index', compact('accounts'));
     }
 
+    public function summary()
+    {
+        $accounts = Account::where('is_active',true)->get();
+        if(request()->is('api/*')){
+            $accs = [];
+            foreach($accounts as $account){
+                $accs[] =[
+                    'account_id' => $account->id,
+                    'account'=>$account->name,
+                    'received'=>$account->payments->sum('amount'),
+                    'spent'=>$account->expenses->sum('amount'),
+                    'balance'=>$account->payments->sum('amount') - $account->expenses->sum('amount'),
+                    'status'=>$account->is_active ? 'Active' : 'Inactive',
+                ];
+            }
+            return response()->json(['accounts'=>$accs,'message'=>'Accounts fetched successfully']);
+        }
+        return view('accounts.index', compact('accounts'));
+    }
     /**
      * Show the form for creating a new resource.
      */

@@ -15,7 +15,7 @@ class PaymentController extends Controller
     {
         $payments = Payment::all();
         if(request()->is('api/*')){
-            return response()->json($payments);
+            return response()->json(['data'=>$payments]);
         }
         return view('payments.index', compact('payments'));
     }
