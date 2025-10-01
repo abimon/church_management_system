@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use App\Models\Payment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth ;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
@@ -15,8 +15,8 @@ class PaymentController extends Controller
     public function index()
     {
         $payments = Payment::all();
-        if(request()->is('api/*')){
-            return response()->json(['data'=>$payments]);
+        if (request()->is('api/*')) {
+            return response()->json(['data' => $payments]);
         }
         return view('payments.index', compact('payments'));
     }
@@ -35,19 +35,25 @@ class PaymentController extends Controller
     public function store()
     {
         $accounts = Account::all();
-        if(request()->is('api/*')){
-            foreach($accounts as $account){
-                if(request($account->name)!=null){
-                    Payment::create([
-                    'account_id' => $account->id,
-                    'amount' => request($account->name),
-                    'status' => 'pending',
-                    'payment_method' => request('payment_method')??'Mobile Money',
-                    'reference' => strtoupper(uniqid()),
-                    'logged_by' => Auth::user()->id,
-                ]);}
+        if (request()->is('api/*')) {
+            foreach ($accounts as $account) {
+                if (request($account->name) != null) {
+                    try {
+                        Payment::create([
+                            'account_id' => $account->id,
+                            'amount' => request($account->name),
+                            'status' => 'pending',
+                            'payment_method' => request('payment_method') ?? 'Mobile Money',
+                            'reference' => strtoupper(uniqid()),
+                            'user_id' => Auth::user()->id,
+                            'logged_by' => Auth::user()->id,
+                        ]);
+                    } catch (\Exception $e) {
+                        return response()->json(['message' => 'Error logging payment for account: ' . $account->name, 'error' => $e->getMessage()], 500);
+                    }
+                }
             }
-            return response()->json(['message'=>'Payments logged successfully']);
+            return response()->json(['message' => 'Payments logged successfully']);
         }
     }
 
